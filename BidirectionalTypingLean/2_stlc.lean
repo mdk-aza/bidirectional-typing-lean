@@ -12,7 +12,6 @@ inductive Expr where
   | app : Expr → Expr → Expr -- 関数適用 e1 e2
   | anno : Expr → Ty → Expr -- 型アノテーション (e : A)
 
-
 -- 文脈は (変数名, 型) のリスト
 def Context := List (String × Ty)
 
@@ -25,37 +24,41 @@ def Context.lookup (ctx : Context) (name : String) : Option Ty :=
 -- 型合成 (Synthesis: e ⇒ A)
 def synthesize (ctx : Context) : Expr → Option Ty
     | .var x => ctx.findSome? (fun (n, ty) => if n == x then some ty else none)
-    | .anno e ty => if (check ctx e ty).isSome then some ty else none
+     -- | .anno e ty => if (check ctx e ty).isSome then some ty else none
+    | .anno e ty => do
+        check ctx e ty -- 失敗(none)ならここで自動的に return none される
+        return ty -- 成功したら ty を返す (some ty になる)
 
     -- 【除去則 = 合成】 →E⇒
-    -- 関数 e1 が合成した型 (A → B) を分解し、引数 e2 の検査に A を再利用する
-    | .app e1 e2 =>
-        match synthesize ctx e1 with
-        | some (.arrow a b) =>
-            -- e2 を A で検査 (画像中央の青い矢印の流れ)
-            match check ctx e2 a with
-            | some _ => some b -- 結果として B を出力 (オレンジの矢印)
-            | none => none
-        | _ => none
+    | .app e1 e2 => do
+        -- 1. e1 を合成し、結果が arrow 型なら a と b に分解。それ以外なら `none` を返す
+        let .arrow a b ← synthesize ctx e1 | none
+
+        -- 2. e2 を a で検査。失敗したらここで自動終了
+        check ctx e2 a
+
+        -- 3. 全て成功したら b を返す
+        return b
     | .unit | .lam .. => none
 
 -- 型検査 (Checking: e ⇐ A)
 def check (ctx : Context) : Expr → Ty → Option Unit
     -- 【導入則 = 検査】 unitI⇐
-    -- 目標型が unit であることが既知なので、即座に承認
     | .unit, .unit => some ()
 
     -- 【導入則 = 検査】 →I⇐
-    -- 目標型 A1 → A2 が既知。文脈を (x : A1) で拡張し、body を A2 で検査
     | .lam x body, .arrow a1 a2 =>
         check ((x, a1) :: ctx) body a2
 
     -- 【方向転換】 Sub⇐
-    -- 合成と検査の境界線。e から型 A を合成し、目標型 B と一致するか検証
-    | e, targetTy =>
-        match synthesize ctx e with
-        | some synthTy =>
-            -- A = B の検証 (画像右側の境界線)
-            if synthTy == targetTy then some () else none
-        | none => none
+    -- 合成と検査の境界線。
+    | e, targetTy => do
+        -- 1. e から型を合成する (失敗した場合は自動的に none が返って終了)
+        let synthTy ← synthesize ctx e
+
+        -- 2. 合成された型 (synthTy) と目標型 (targetTy) が一致するか判定
+        if synthTy == targetTy then
+            return ()
+        else
+            none
 end
