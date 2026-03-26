@@ -11,6 +11,7 @@ inductive Expr where
   | lam : String → Expr → Expr
   | app : Expr → Expr → Expr
   | anno : Expr → Ty → Expr
+  -- 以下が追加
   | inl : Expr → Expr
   | inr : Expr → Expr
   | case : Expr → String → Expr → String → Expr → Expr
