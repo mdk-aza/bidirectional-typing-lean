@@ -293,15 +293,15 @@ theorem synthesize_sound {ctx : Context} {e : Expr} {ty : Ty}
 termination_by (sizeOf e, 0)
 decreasing_by
 all_goals simp_wf
-· -- app の e1 への再帰
+·
     subst_vars
     left
     exact sizeOf_app_lt_left e1 e2
-· -- app の e2 への再帰
+·
     subst_vars
     left
     exact sizeOf_app_lt_right e1 e2
-· -- anno の e' への再帰
+·
     subst_vars
     left
     simp [sizeOf, Expr._sizeOf_1]
@@ -327,14 +327,10 @@ theorem check_sound {ctx : Context} {e : Expr} {ty : Ty}
       cases h_syn : synthesize ctx (Expr.var x) with
       | none => simp_all [bind, Option.bind]
       | some synthTy =>
-        -- 4. 成功ルート。h_eval から synthTy = ty を導き出す
-        -- simp_all が if 文を解いて h_eval を「synthTy = ty」に変えてくれています
         simp_all [bind, Option.bind]
 
-        -- 🌟 split は不要！直接 h_eval を使って代入する
         subst h_eval
 
-        -- あとは合成の健全性 (synthesize_sound) を呼ぶだけ
         apply Check.sub_check
         exact synthesize_sound h_syn
 
@@ -350,7 +346,7 @@ theorem check_sound {ctx : Context} {e : Expr} {ty : Ty}
         exact check_sound h_eval
 
     | app e1 e2 =>
-      rw [h_e_eq] at h_eval -- 🌟追加
+      rw [h_e_eq] at h_eval
       unfold check at h_eval
       cases h_syn : synthesize ctx (Expr.app e1 e2) with
       | none => simp_all [bind, Option.bind]
@@ -371,7 +367,7 @@ theorem check_sound {ctx : Context} {e : Expr} {ty : Ty}
         apply Check.sub_check
         exact synthesize_sound h_syn
 
--- ↓ ここが theorem の末尾（| anno の外）
+--
 termination_by (sizeOf e, 1)
 decreasing_by
 all_goals simp_wf
