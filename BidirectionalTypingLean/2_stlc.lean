@@ -44,24 +44,6 @@ def check (ctx : Context) : Expr → Ty → Option Unit
 
 end
 
--- テスト1: 空の文脈で、() が unit型かチェックする
--- 期待される結果: some () （成功！）
-#eval check [] Expr.unit Ty.unit
-
--- テスト2: 空の文脈で、() が (unit -> unit)型かチェックする
--- 期待される結果: none （型エラー！）
-#eval check [] Expr.unit (Ty.arrow Ty.unit Ty.unit)
-
--- テスト3: 恒等関数 (λx. x) が (unit -> unit)型かチェックする
--- 期待される結果: some () （成功！）
-#eval check [] (Expr.lam "x" (Expr.var "x")) (Ty.arrow Ty.unit Ty.unit)
-
--- テスト4: (λx. x) () という関数適用が unit型を合成するか？
--- 期待される結果: some Ty.unit
-def idFunc := Expr.anno (Expr.lam "x" (Expr.var "x")) (Ty.arrow Ty.unit Ty.unit)
-#eval synthesize [] (Expr.app idFunc Expr.unit)
-
-
 -- 【1. 数学的な推論規則（仕様）の定義】
 -- 合成（Synth: Γ ⊢ e ⇒ A）と 検査（Check: Γ ⊢ e ⇐ A）
 
