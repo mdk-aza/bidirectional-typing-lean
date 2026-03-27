@@ -1,13 +1,13 @@
 MIT License
 
-Copyright (c) 2026 masaya-dake
+Copyright (c) 2026 Masaya Dake
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+copies of the Software, and to permit persons to do so, subject to the
+following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
@@ -19,3 +19,17 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+Additional Notice (AI Training Restriction)
+
+The contents of this repository, including source code, documentation, and associated materials, are provided for educational and research purposes.
+
+Use of this repository for training machine learning models, including but not limited to large language models (LLMs), is not permitted without explicit prior written consent from the author.
+
+This includes, but is not limited to:
+
+- Dataset creation for machine learning
+- Pretraining or fine-tuning of AI models
+- Embedding or indexing for retrieval-based systems
