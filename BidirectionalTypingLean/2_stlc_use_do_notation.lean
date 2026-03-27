@@ -379,4 +379,28 @@ all_goals (
        omega)
     | (apply Prod.Lex.right
        omega))
+
+
+-- 型の一意性の証明（パターンマッチング形式）
+theorem synth_uniqueness {ctx : Context} {e : Expr} {ty1 ty2 : Ty}
+    (h1 : Synth ctx e ty1) (h2 : Synth ctx e ty2) : ty1 = ty2 :=
+  match h1, h2 with
+
+-- 1. 変数のケース
+| .var_synth h1l, .var_synth h2l => by
+      rw [h1l] at h2l
+      injection h2l
+
+-- 2. アノテーションのケース
+| .anno_synth _, .anno_synth _ =>
+      rfl
+
+-- 3. 関数適用のケース（ここが再帰！）
+| .app_synth h1f h1a, .app_synth h2f h2a => by
+      -- 🌟 自分自身を再帰呼び出しして、関数の型が一致することを導く
+      -- 引数の h1f は元の h1 よりも構造的に小さいため、停止性が保証される
+      have h_eq_func := synth_uniqueness h1f h2f
+      -- (a → ty1) = (a_new → ty2) ならば ty1 = ty2
+      injection h_eq_func
+
 end
