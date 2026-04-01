@@ -1,3 +1,5 @@
+This project is part of my preparation for research in programming languages, particularly in type systems and formal methods.
+
 # Bidirectional Typing Formalization in Lean 4
 
 This repository provides a formalization of **Bidirectional Type Systems**, bridging the gap between theoretical specifications and deterministic type-checking algorithms.
