@@ -7,7 +7,7 @@ This repository provides a formalization of **Bidirectional Type Systems**, brid
 ## 🎯 Purpose
 
 - **Mechanization**: To implement a sound and deterministic bidirectional type-checking algorithm in Lean 4.
-- **Verification**: To prove **Soundness** (the algorithm follows the rules) and **Uniqueness** (synthesis results are deterministic).
+- **Verification**: To explore and formalize properties such as soundness and determinism.
 - **Research**: To explore the design principles of bidirectional typing as discussed in modern PL research (e.g., Dunfield & Krishnaswami, 2020) and TaPL.
 - **Extensibility**: To build a foundation for formalizing more advanced type systems (e.g., Subtyping, System F, and Dependent Types).
 
